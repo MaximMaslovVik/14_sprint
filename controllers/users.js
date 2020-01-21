@@ -1,4 +1,4 @@
-const bcrypt = require('bcryptjs'); // импортируем bcrypt
+const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 
@@ -10,19 +10,25 @@ module.exports.getAllUsers = (req, res) => {
       }
       return res.send({ data: user });
     })
-    .catch(() => res.status(500).send({ message: 'Произошла ошибка' }));
+    .catch((error) => res.status(500).send({ message: error.message }));
 };
 
 module.exports.createUser = (req, res) => {
-  const { name, about, avatar, email } = req.body;
-  bcrypt.hash(req.body.password, 10)
-    .then((hash) => User.create { name, about, avatar, email, password: hash })
-    .then(({ name, about, avatar, email }) => res.send({ name, about, avatar, email }))
-    .catch(() => res.status(404).send({ message: 'Произошла ошибка, неудалось создать пользователя' }));
+  const { name, about, avatar, email, password } = req.body;
+  if (password.length > 9) {
+    bcrypt.hash(password, 10)
+      .then(hash => User.create({ name, about, avatar, email, password: hash }))
+        .then((user) => {res.status(201).send({_id: user._id, email: user.email,});
+      });
+      .catch(() => res.status(500).send({ message: 'Не удалось создать пользователя' })
+     )
+  } else {
+    res.status(500).send({ message: 'Слишком короткий пароль!' });
+  }
 };
 
 module.exports.getUser = (req, res) => {
-  User.findById(req.user._id)
+  User.findById(req.params.userId)
     .then((userId) => {
       if (!userId) {
         res.status(404).send({ message: 'Такого пользователя нет' });
@@ -37,12 +43,10 @@ module.exports.login = (req, res) => {
   const { email, password } = req.body;
   return User.findUserByCredentials(email, password)
     .then((user) => {
-    // создадим токен
-      const token = jwt.sign({ _id: user._id }, 'some-secret-key');
+      const token = jwt.sign({ _id: user._id }, 'some-secret-key', { expiresIn: '7d' });
+      console.log(token);
       res.cookie('token', token);
       res.status(200).send({ token });
-      // вернём токен
-      res.send({ token });
     })
     .catch((err) => {
       res.status(401).send({ message: err.message });

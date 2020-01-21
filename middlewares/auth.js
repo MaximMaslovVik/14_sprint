@@ -17,7 +17,6 @@ module.exports = (req, res, next) => {
       .status(401)
       .send({ message: 'Доступ запрещен. Необходима авторизация' });
   }
-
   req.user = payload;
   next();
 };
