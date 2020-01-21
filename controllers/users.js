@@ -17,11 +17,10 @@ module.exports.createUser = (req, res) => {
   const { name, about, avatar, email, password } = req.body;
   if (password.length > 9) {
     bcrypt.hash(password, 10)
-      .then(hash => User.create({ name, about, avatar, email, password: hash }))
-        .then((user) => {res.status(201).send({_id: user._id, email: user.email,});
-      });
-      .catch(() => res.status(500).send({ message: 'Не удалось создать пользователя' })
-     )
+      .then((hash) => User.create({ name, about, avatar, email, password: hash }));
+        .then((user) => {res.status(201).send({_id: user._id, email: user.email });
+      })
+      .catch(() => res.status(500).send({ message: 'Не удалось создать пользователя' }));
   } else {
     res.status(500).send({ message: 'Слишком короткий пароль!' });
   }
