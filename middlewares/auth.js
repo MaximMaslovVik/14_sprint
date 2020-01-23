@@ -1,8 +1,13 @@
 const cookieParser = require('cookie-parser');
 const jwt = require('jsonwebtoken');
+
 const express = require('express');
-const app = express()
-app.use(cookieParser())
+/*
+const { JWT_SECRET } = require('../secret.js');
+const token = jwt.sign({ _id: user._id }, JWT_SECRET, { expiresIn: '7d' });
+*/
+const app = express();
+app.use(cookieParser());
 
 function errorStatus(res) {
   return res

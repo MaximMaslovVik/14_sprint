@@ -1,8 +1,11 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+
 const User = require('../models/user');
-
-
+/*
+const { JWT_SECRET } = require('../secret.js');
+const token = jwt.sign({ _id: user._id }, JWT_SECRET, { expiresIn: '7d' });
+*/
 // отправим токен, браузер сохранит его в куках
 
 module.exports.getAllUsers = (req, res) => {
@@ -20,8 +23,8 @@ module.exports.createUser = (req, res) => {
   const { name, about, avatar, email, password } = req.body;
   if (password.length > 11) {
     bcrypt.hash(password, 10)
-      .then((hash) => User.create({ name, about, avatar, email, password: hash }))
-      .then(({ name, about, avatar, email }) => res.send({ name, about, avatar, email }))
+      .then((hash) => User.create({name, about, avatar, email, password: hash}))
+      .then(({name, about, avatar, email}) => res.send({name, about, avatar, email }))
       .catch(() => res.status(404).send({ message: 'Не удалось создать пользователя' }));
   } else {
     res.status(500).send({ message: 'Слишком короткий пароль!' });
@@ -48,7 +51,7 @@ module.exports.login = (req, res) => {
       const token = jwt.sign({ _id: user._id }, JWT_SECRET, { expiresIn: '7d' });
       res
         .cookie('jwt', token, {
-          maxAge: 3600000,
+          maxAge: 604800000,
           httpOnly: true,
           sameSite: true,
         })
