@@ -20,12 +20,17 @@ module.exports.createCard = (req, res) => {
 };
 
 module.exports.deleteCard = (req, res) => {
-  Card.findByIdAndRemove(req.params.cardId)
+  const { cardId } = req.params;
+  const ownerId = req.user._id;
+  Card.findById(cardId)
     .then((card) => {
-      if (card === null) {
-        return res.status(404).send({ message: 'Данной карточки нет!' });
+      if (card.owner.toString() === ownerId) {
+        Card.findByIdAndRemove(cardId)
+          .then((card) => res.send({ data: card }))
+          .catch(() => errorSend(res));
+      } else {
+        return res.status(401).send({ message: 'Вы не имеете доступ к удалению чужих карточек' });
       }
-      return res.send({ data: card });
     })
-    .catch((error) => res.status(500).send({ message: error.message }));
+    .catch(() => res.status(404).send({ message: 'Не найден объект с таким идентификатором' }));
 };

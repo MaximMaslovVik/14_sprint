@@ -2,6 +2,9 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 
+
+// отправим токен, браузер сохранит его в куках
+
 module.exports.getAllUsers = (req, res) => {
   User.find({})
     .then((user) => {
@@ -15,12 +18,11 @@ module.exports.getAllUsers = (req, res) => {
 
 module.exports.createUser = (req, res) => {
   const { name, about, avatar, email, password } = req.body;
-  if (password.length > 9) {
+  if (password.length > 11) {
     bcrypt.hash(password, 10)
-      .then((hash) => User.create({ name, about, avatar, email, password: hash }));
-        .then((user) => {res.status(201).send({_id: user._id, email: user.email });
-      })
-      .catch(() => res.status(500).send({ message: 'Не удалось создать пользователя' }));
+      .then((hash) => User.create({ name, about, avatar, email, password: hash }))
+      .then(({ name, about, avatar, email }) => res.send({ name, about, avatar, email }))
+      .catch(() => res.status(404).send({ message: 'Не удалось создать пользователя' }));
   } else {
     res.status(500).send({ message: 'Слишком короткий пароль!' });
   }
@@ -42,10 +44,16 @@ module.exports.login = (req, res) => {
   const { email, password } = req.body;
   return User.findUserByCredentials(email, password)
     .then((user) => {
-      const token = jwt.sign({ _id: user._id }, 'some-secret-key', { expiresIn: '7d' });
-      console.log(token);
-      res.cookie('token', token);
-      res.status(200).send({ token });
+      const JWT_SECRET = 'b24076852c7c534c77ce7b233022026ffc663393b557432496f2a70fa3756b33';
+      const token = jwt.sign({ _id: user._id }, JWT_SECRET, { expiresIn: '7d' });
+      res
+        .cookie('jwt', token, {
+          maxAge: 3600000,
+          httpOnly: true,
+          sameSite: true,
+        })
+        .send(token)
+        .end();
     })
     .catch((err) => {
       res.status(401).send({ message: err.message });

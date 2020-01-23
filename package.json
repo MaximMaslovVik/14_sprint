@@ -1,7 +1,7 @@
 {
-  "name": "13_sprint",
+  "name": "14_sprint",
   "version": "1.0.1",
-  "description": "13_sprint",
+  "description": "14_sprint",
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
@@ -9,12 +9,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/MaximMaslovVik/13_sprint.git"
+    "url": "git+https://github.com/MaximMaslovVik/14_sprint.git"
   },
   "author": "Maslov Maxim",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/MaximMaslovVik/13_sprint/issues"
+    "url": "https://github.com/MaximMaslovVik/14_sprint/issues"
   },
   "homepage": "",
   "devDependencies": {
@@ -24,16 +24,22 @@
     "cross-env": "^6.0.3",
     "eslint": "^6.8.0",
     "eslint-plugin-react": "^7.17.0",
+    "express": "^4.17.1",
     "gh-pages": "^2.1.1",
-    "nodemon": "^2.0.2",
-    "express": "^4.17.1"
+    "jest": "^25.1.0",
+    "nodemon": "^2.0.2"
   },
   "dependencies": {
+    "authorization-header": "^0.2.0",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
+    "cookie": "^0.4.0",
+    "cookie-parser": "^1.4.4",
+    "cookies": "^0.8.0",
     "core-js": "^3.1.4",
     "crypto": "^1.0.1",
     "debug": "^4.1.1",
+    "dotenv": "^8.2.0",
     "escape-html": "^1.0.3",
     "eslint-config-airbnb-base": "^14.0.0",
     "eslint-plugin-import": "^2.19.1",
@@ -42,6 +48,7 @@
     "express-validator": "^6.3.1",
     "file-loader": "^4.3.0",
     "git": "^0.1.5",
+    "gh-pages": "~2.0.1",
     "jshint": "^2.11.0-rc1",
     "jsonwebtoken": "^8.5.1",
     "mongod": "^2.0.0",
