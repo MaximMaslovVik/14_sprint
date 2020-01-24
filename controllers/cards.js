@@ -1,5 +1,9 @@
 const Card = require('../models/card');
 
+function errorSend(res) {
+  res.status(500).send({ message: 'Произошла ошибка' });
+}
+
 module.exports.getAllCards = (req, res) => {
   Card.find({})
     .then((card) => {
@@ -26,11 +30,9 @@ module.exports.deleteCard = (req, res) => {
     .then((card) => {
       if (card.owner.toString() === ownerId) {
         Card.findByIdAndRemove(cardId)
-          .then((card) => res.send({ data: card }))
+          .then((cardI) => res.send({ data: cardI }))
           .catch(() => errorSend(res));
-      } else {
-        return res.status(401).send({ message: 'Вы не имеете доступ к удалению чужих карточек' });
-      }
+      } return res.status(403).send({ message: 'Вы не имеете доступ к удалению чужих карточек' });
     })
     .catch(() => res.status(404).send({ message: 'Не найден объект с таким идентификатором' }));
 };
