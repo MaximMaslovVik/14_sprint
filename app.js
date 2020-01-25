@@ -5,16 +5,12 @@ const cookieParser = require('cookie-parser');
 
 const app = express();
 
-const { PORT = 3000 } = process.env;
+const { PORT } = require('./secret');
 
 const users = require('./routes/users');
 const cards = require('./routes/cards');
 const auth = require('./middlewares/auth');
 const { createUser, login } = require('./controllers/users');
-
-
-require('dotenv').config();
-
 
 mongoose.connect('mongodb://localhost:27017/mestodb', {
   useNewUrlParser: true,
