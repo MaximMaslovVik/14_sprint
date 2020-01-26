@@ -29,7 +29,7 @@ module.exports.createUser = (req, res) => {
       .then((hash) => User.create({
         name, about, avatar, email, password: hash,
       }))
-      .then((user) => res.send({ data: user }))
+      .then((user) => res.send({ data: user.omitPrivate() }))
       .catch(() => res.status(500).send({ message: 'Не удалось создать пользователя' }));
   } else {
     res.status(500).send({ message: 'Слишком короткий пароль!' });
