@@ -40,7 +40,7 @@
     "express": "^4.17.1",
     "express-session": "^1.17.0",
     "express-validator": "^6.3.1",
-    "file-loader": "^4.3.0",
+    "file-loader": "^6.2.0",
     "git": "^0.1.5",
     "jshint": "^2.11.0-rc1",
     "jsonwebtoken": "^8.5.1",
